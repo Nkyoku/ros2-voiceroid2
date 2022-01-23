@@ -44,6 +44,6 @@ __Windows Only__
      Default : `<Documents filder>/VOICEROID2/記号ポーズ辞書/user.sdic`
    - `play_mode` : string  
      Behavior of playing multiple sound.  
-     - `stopped` : Stop previous sound.
-     - `queued` : Wait for finishing previous sound.
-     - `overlapped` : All sound are played simultaneously.
+     - `stop` : Stop previous sound.
+     - `wait` : Wait for finishing previous sound.
+     - `overlap` : All sound are played simultaneously.

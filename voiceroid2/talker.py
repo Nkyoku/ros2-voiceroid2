@@ -60,11 +60,11 @@ class TalkerNode(Node):
         # Load settings
         subscribe_topic_name = self.declare_parameter("subscribe_topic_name", "text").value
         publish_topic_name = self.declare_parameter("publish_topic_name", None).value
-        play_mode = self.declare_parameter("play_mode", "stopped").value
-        if play_mode == "queued":
+        play_mode = self.declare_parameter("play_mode", "stop").value
+        if play_mode == "wait":
             self.stop_before_play = False
             self.use_winsound = True
-        elif play_mode == "overlapped":
+        elif play_mode == "overlap":
             self.stop_before_play = False
             self.use_winsound = False
         else:
@@ -106,14 +106,14 @@ class TalkerNode(Node):
 
     def play_sound(self, speech):
         if self.use_winsound:
-            # play_mode == "queued"
+            # play_mode == "wait"
             winsound.PlaySound(speech, winsound.SND_MEMORY)
         else:
             if self.stop_before_play:
-                # play_mode == "stopped"
+                # play_mode == "stop"
                 simpleaudio.stop_all()
             else:
-                # play_mode == "overlapped"
+                # play_mode == "overlap"
                 pass
             obj = simpleaudio.play_buffer(speech, 1, 2, 44100)
             obj.wait_done()
