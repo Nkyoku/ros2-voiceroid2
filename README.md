@@ -7,6 +7,8 @@ __Windows Only__
 1. Install VOICEROID2 (x64).
 1. Install Python 3.4 (x64) or later.
 1. Install ROS2 foxy or later.
+1. `pip install simpleaudio`
+1. `pip install git+https://github.com/Nkyoku/pyvcroid2.git`
 1. Clone this repository.
 1. Build this repository.  
 `colcon build --merge-install --packages-select voiceroid2`
@@ -40,3 +42,8 @@ __Windows Only__
    - `symbol_dictionary` : string  
      Path of the symbol dictionary.  
      Default : `<Documents filder>/VOICEROID2/記号ポーズ辞書/user.sdic`
+   - `play_mode` : string  
+     Behavior of playing multiple sound.  
+     - `stopped` : Stop previous sound.
+     - `queued` : Wait for finishing previous sound.
+     - `overlapped` : All sound are played simultaneously.

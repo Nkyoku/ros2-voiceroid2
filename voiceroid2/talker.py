@@ -1,6 +1,7 @@
 import rclpy
-import pip
 import os
+import pyvcroid2
+import simpleaudio
 import winsound
 import threading
 from ctypes import *
@@ -8,14 +9,6 @@ from rclpy.node import Node
 import std_msgs.msg
 from rcl_interfaces.msg import ParameterType
 from rcl_interfaces.msg import SetParametersResult
-
-# Import pyvcroid2
-try:
-    import pyvcroid2
-except:
-    # Install from git if not installed
-    pip.main(["install", "git+https://github.com/Nkyoku/pyvcroid2.git"])
-    import pyvcroid2
 
 # Talker node
 class TalkerNode(Node):
@@ -67,6 +60,16 @@ class TalkerNode(Node):
         # Load settings
         subscribe_topic_name = self.declare_parameter("subscribe_topic_name", "text").value
         publish_topic_name = self.declare_parameter("publish_topic_name", None).value
+        play_mode = self.declare_parameter("play_mode", "stopped").value
+        if play_mode == "queued":
+            self.stop_before_play = False
+            self.use_winsound = True
+        elif play_mode == "overlapped":
+            self.stop_before_play = False
+            self.use_winsound = False
+        else:
+            self.stop_before_play = True
+            self.use_winsound = False
 
         # Initialize node
         self.subscription = self.create_subscription(
@@ -84,13 +87,14 @@ class TalkerNode(Node):
 
     def text_callback(self, msg):
         text = msg.data
-        speech, _ = self.vc.textToSpeech(text)
         if self.publisher is None:
             # Play sound in worker thread
+            speech, _ = self.vc.textToSpeech(text, raw = not self.use_winsound)
             t = threading.Thread(target=self.play_sound, args=(speech,))
             t.start()
         else:
             # Publish sound data
+            speech, _ = self.vc.textToSpeech(text)
             msg = std_msgs.msg.ByteMultiArray()
             msg.data = [speech]
             self.publisher.publish(msg)
@@ -101,7 +105,18 @@ class TalkerNode(Node):
         return SetParametersResult(successful=True)
 
     def play_sound(self, speech):
-        winsound.PlaySound(speech, winsound.SND_MEMORY)
+        if self.use_winsound:
+            # play_mode == "queued"
+            winsound.PlaySound(speech, winsound.SND_MEMORY)
+        else:
+            if self.stop_before_play:
+                # play_mode == "stopped"
+                simpleaudio.stop_all()
+            else:
+                # play_mode == "overlapped"
+                pass
+            obj = simpleaudio.play_buffer(speech, 1, 2, 44100)
+            obj.wait_done()
 
 def main(args=None):
     rclpy.init(args=args)
