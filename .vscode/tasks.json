@@ -1,0 +1,27 @@
+{
+    "tasks": [
+        {
+            "label": "colcon build voiceroid2",
+            "detail": "Build voiceroid2 package",
+            "type": "shell",
+            "command": "colcon",
+            "args": [
+                "build",
+                "--merge-install",
+                "--packages-select",
+                "voiceroid2"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "presentation": {
+                "focus": true,
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": "build",
+            "problemMatcher": []
+        }
+    ],
+    "version": "2.0.0"
+}
