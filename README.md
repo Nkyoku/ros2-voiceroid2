@@ -27,7 +27,7 @@ __Windows Only__
      If `voice` is not specified, first found one will be used.
    - `subscribe_topic_name` : string  
      Topic name that the talker node subscribes.
-     The message type of the topic is `std_msgs/String`.
+     The message type of the topic is `std_msgs/String`.  
      Default : `text`
    - `publish_topic_name` : string  
      Topic name that the talker node publishes speech data.
@@ -35,15 +35,15 @@ __Windows Only__
      If `publish_topic_name` is not specified, the speech data will be played by local computer which the talker node runs on.
    - `phrase_dictionary` : string  
      Path of the phrase dictionary.  
-     Default : `<Documents filder>/VOICEROID2/フレーズ辞書/user.pdic`
+     Default : `<Documents folder>/VOICEROID2/フレーズ辞書/user.pdic`
    - `word_dictionary` : string  
      Path of the word dictionary.  
-     Default : `<Documents filder>/VOICEROID2/単語辞書/user.wdic`
+     Default : `<Documents folder>/VOICEROID2/単語辞書/user.wdic`
    - `symbol_dictionary` : string  
      Path of the symbol dictionary.  
-     Default : `<Documents filder>/VOICEROID2/記号ポーズ辞書/user.sdic`
+     Default : `<Documents folder>/VOICEROID2/記号ポーズ辞書/user.sdic`
    - `play_mode` : string  
      Behavior of playing multiple sound.  
      - `stop` : Stop previous sound.
      - `wait` : Wait for finishing previous sound.
-     - `overlap` : All sound are played simultaneously.
+     - `overlap` : Play simultaneously.
