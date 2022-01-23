@@ -1,4 +1,3 @@
-from multiprocessing import get_logger
 import rclpy
 import pip
 import os
@@ -30,7 +29,7 @@ class TalkerNode(Node):
             # Load language library
             language_name = self.declare_parameter("language", "standard").value
             self.vc.loadLanguage(language_name)
-            get_logger().info("Language library '{0}' was loaded".format(language_name))
+            self.get_logger().info("Language library '{0}' was loaded".format(language_name))
 
             # Load voice library
             voice_list = self.vc.listVoices()
@@ -38,7 +37,7 @@ class TalkerNode(Node):
                 raise Exception("No voice library")
             voice_name = self.declare_parameter("voice", voice_list[0]).value
             self.vc.loadVoice(voice_name)
-            get_logger().info("Voice library '{0}' was loaded".format(voice_name))
+            self.get_logger().info("Voice library '{0}' was loaded".format(voice_name))
 
             # Load dictionaries
             rfid = c_char_p(b"\xD0\x9A\xD3\xFD\x8F\x23\xAF\x46\xAD\xB4\x6C\x85\x48\x03\x69\xC7")
@@ -54,15 +53,15 @@ class TalkerNode(Node):
             sdic_path = self.declare_parameter("symbol_dictionary", default_sdic_path).value
             if (pdic_path != default_pdic_path) or os.path.isfile(pdic_path):
                 self.vc.reloadPhraseDictionary(pdic_path)
-                get_logger().info("Phrase dictionary '{0}' was loaded".format(pdic_path))
+                self.get_logger().info("Phrase dictionary '{0}' was loaded".format(pdic_path))
             if (wdic_path != default_wdic_path) or os.path.isfile(wdic_path):
                 self.vc.reloadWordDictionary(wdic_path)
-                get_logger().info("Word dictionary '{0}' was loaded".format(wdic_path))
+                self.get_logger().info("Word dictionary '{0}' was loaded".format(wdic_path))
             if (sdic_path != default_sdic_path) or os.path.isfile(sdic_path):
                 self.vc.reloadSymbolDictionary(sdic_path)
-                get_logger().info("Symbol dictionary '{0}' was loaded".format(sdic_path))
+                self.get_logger().info("Symbol dictionary '{0}' was loaded".format(sdic_path))
         except Exception as e:
-            get_logger().error(e)
+            self.get_logger().error(e)
             raise e
 
         # Load settings
@@ -77,10 +76,10 @@ class TalkerNode(Node):
             10)
         if publish_topic_name is not None:
             self.publisher = self.create_publisher(std_msgs.msg.ByteMultiArray, publish_topic_name, 10)
-            get_logger().info("Speech data will be published as topic '{0}'".format(publish_topic_name))
+            self.get_logger().info("Speech data will be published as topic '{0}'".format(publish_topic_name))
         else:
             self.publisher = None
-            get_logger().info("Speech data will be played by local computer")
+            self.get_logger().info("Speech data will be played by local computer")
         self.add_on_set_parameters_callback(self.parameter_callback)
 
     def text_callback(self, msg):
