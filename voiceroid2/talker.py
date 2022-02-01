@@ -87,14 +87,17 @@ class TalkerNode(Node):
 
     def text_callback(self, msg):
         text = msg.data
+        try:
+            speech, _ = self.vc.textToSpeech(text, raw = (self.publisher is None) and (not self.use_winsound))
+        except Exception as e:
+            self.get_logger().warn(str(e))
+            return
         if self.publisher is None:
             # Play sound in worker thread
-            speech, _ = self.vc.textToSpeech(text, raw = not self.use_winsound)
             t = threading.Thread(target=self.play_sound, args=(speech,))
             t.start()
         else:
             # Publish sound data
-            speech, _ = self.vc.textToSpeech(text)
             msg = std_msgs.msg.ByteMultiArray()
             msg.data = [speech]
             self.publisher.publish(msg)
